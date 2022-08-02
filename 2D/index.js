@@ -19,7 +19,8 @@ function moveTo(from, to, duration, speed) {
   return arr;
 }
 
-function uniformRectilinearMotion(from, to, duration, speed) { // (one axles)
+function uniformRectilinearMotion(from, to, duration, speed) {
+  // (one axles)
   let arr = [];
 
   let NumberOfFrames = duration * speed;
@@ -37,24 +38,46 @@ function uniformRectilinearMotion(from, to, duration, speed) { // (one axles)
 
 //---------- rectilinear dynamic motion ( two axles )
 
-function moveToDynamic( from, to, duration, speed, dynamicsTime ){
+function moveToDynamic(from, to, duration, speed, dynamicsTime) {}
 
+function uniformlyAcceleratedRectilinearMotion(
+  from,
+  to,
+  duration,
+  speed,
+  dynamicsTime = duration / 2
+) {  // movement along one axis with dynamics (acceleration, braking)
 
+  let arr = [];
+
+  let NumberOfFrames = duration * speed;
+  let S = to - from;
+
+  if( dynamicsTime === duration / 2 ){  // only acceleration and deceleration
+
+    let a = 2 * S / (duration*duration); // acceleration
+    console.log(a);
+
+    for( let i = 1; i <= NumberOfFrames; i++ ){
+      let x;
+      if( i < NumberOfFrames ){
+        x = from + (a * (i*duration/NumberOfFrames * i*duration/NumberOfFrames) / 2);
+        arr.push(x);
+      } else {
+      }
+
+    }
+
+  } else if( dynamicsTime < duration / 2 ) {  // acceleration, constant speed and deceleration
+
+  } else {
+    alert( 'dynamics Time (acceleration, deceleration time), cannot be more than half of the total movement time!' );
+  }
+
+  return arr;
 }
 
-function uniformlyAcceleratedRectilinearMotion(from, to, duration, speed, dynamicsTime) { // movement along one axis with dynamics (acceleration, braking)
-    let arr = [];
-  
-    let NumberOfFrames = duration * speed;
-    let distancePerOneFrame = (to - from) / NumberOfFrames;
-  
-    for (let i = 0; i <= NumberOfFrames; i++) {
-      let x = from + i * distancePerOneFrame;
-      arr.push(x);
-    }
-  
-    return arr;
-  }
+console.log(uniformlyAcceleratedRectilinearMotion( 100, 200, 2, 10 ))
 
 //-----------------------
 
