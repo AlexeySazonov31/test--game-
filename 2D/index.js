@@ -38,95 +38,147 @@ function uniformRectilinearMotion(from, to, duration, speed) {
 
 //---------- rectilinear dynamic motion ( two axles )
 
-function moveToDynamic(from, to, duration, speed, dynamicsTime, uniformlyAcceleratedPercentage ) {
-    // ( [x, y], [x, y], sec, number of frames per second )
-    let arr = [];
+function moveToDynamic(
+  from,
+  to,
+  duration,
+  speed,
+  dynamicsTime,
+  uniformlyAcceleratedPercentage
+) {
+  // ( [x, y], [x, y], sec, number of frames per second )
+  let arr = [];
 
-    let arrX = uniformlyAcceleratedRectilinearMotion(from[0], to[0], duration, speed, dynamicsTime, uniformlyAcceleratedPercentage);
-    let arrY = uniformlyAcceleratedRectilinearMotion(from[1], to[1], duration, speed, dynamicsTime, uniformlyAcceleratedPercentage);
-  
-    for (let i = 0; i < arrX.length; i++) {
-      let obj = {
-        x: arrX[i],
-        y: arrY[i],
-        speed: speed,
-      };
-      arr.push(obj);
-    }
-  
-    return arr;
+  let arrX = uniformlyAcceleratedRectilinearMotion(
+    from[0],
+    to[0],
+    duration,
+    speed,
+    dynamicsTime,
+    uniformlyAcceleratedPercentage
+  );
+  let arrY = uniformlyAcceleratedRectilinearMotion(
+    from[1],
+    to[1],
+    duration,
+    speed,
+    dynamicsTime,
+    uniformlyAcceleratedPercentage
+  );
+
+  for (let i = 0; i < arrX.length; i++) {
+    let obj = {
+      x: arrX[i],
+      y: arrY[i],
+      speed: speed,
+    };
+    arr.push(obj);
+  }
+
+  return arr;
 }
 
-function uniformlyAcceleratedRectilinearMotion(
+function uniformlyAcceleratedRectilinearMotion( // movement along one axis with dynamics (acceleration, braking)
   from,
   to,
   duration,
   speed,
   dynamicsTime = duration / 2,
   uniformlyAcceleratedPercentage // [1-100](%)
-) {  // movement along one axis with dynamics (acceleration, braking)
-
+) {
   let arr = [];
 
   let NumberOfFrames = duration * speed;
   let S = to - from;
 
-  if( dynamicsTime === duration / 2 ){  // only acceleration and deceleration
+  if (dynamicsTime === duration / 2) {
+    // only acceleration and deceleration
 
-    let a = 2 * S/2 / (duration/2*duration/2); // acceleration
-    let Vlast = Math.sqrt(2*a*S/2);
+    let a = (2 * S) / 2 / (((duration / 2) * duration) / 2); // acceleration
+    let Vlast = Math.sqrt((2 * a * S) / 2);
 
-    for( let i = 1; i <= NumberOfFrames / 2; i++ ){ // overclocking
-        let x = from + (a * (i*duration/NumberOfFrames * i*duration/NumberOfFrames) / 2);
-        arr.push(x);
+    for (let i = 1; i <= NumberOfFrames / 2; i++) {
+      // overclocking
+      let x =
+        from +
+        (a *
+          ((((i * duration) / NumberOfFrames) * i * duration) /
+            NumberOfFrames)) /
+          2;
+      arr.push(x);
     }
 
-    for( let i = 1; i <= NumberOfFrames / 2; i++ ){ // braking
-        let x = from + S/2 + (Vlast * i*duration/NumberOfFrames) + (-a * (i*duration/NumberOfFrames * i*duration/NumberOfFrames) / 2);
-        arr.push(x);
+    for (let i = 1; i <= NumberOfFrames / 2; i++) {
+      // braking
+      let x =
+        from +
+        S / 2 +
+        (Vlast * i * duration) / NumberOfFrames +
+        (-a *
+          ((((i * duration) / NumberOfFrames) * i * duration) /
+            NumberOfFrames)) /
+          2;
+      arr.push(x);
     }
+  } else if (dynamicsTime < duration / 2) {
+    // acceleration, constant speed and deceleration
 
-  } else if( dynamicsTime < duration / 2 ) {  // acceleration, constant speed and deceleration
-
-    let unevenS = uniformlyAcceleratedPercentage/100 * S / 2; // uniformly accelerated
-    let uniformS = S - unevenS*2; // uniform motion
-
+    let unevenS = ((uniformlyAcceleratedPercentage / 100) * S) / 2; // uniformly accelerated
+    let uniformS = S - unevenS * 2; // uniform motion
 
     let NumberOfFramesOfunevenS = dynamicsTime * speed;
-    let NumberOfFramesOfuniformS = NumberOfFrames - NumberOfFramesOfunevenS*2;
+    let NumberOfFramesOfuniformS = NumberOfFrames - NumberOfFramesOfunevenS * 2;
 
     console.log(NumberOfFramesOfunevenS);
-    
-    let a = 2 * unevenS / (dynamicsTime*dynamicsTime); // acceleration
-    let Vconst = Math.sqrt(2*a*unevenS);
 
-    for( let i = 1; i <= NumberOfFramesOfunevenS; i++ ){ // overclocking
-        let x = from + (a * (i*dynamicsTime/NumberOfFramesOfunevenS * i*dynamicsTime/NumberOfFramesOfunevenS)/2);
-        arr.push(x);
+    let a = (2 * unevenS) / (dynamicsTime * dynamicsTime); // acceleration
+    let Vconst = Math.sqrt(2 * a * unevenS);
+
+    for (let i = 1; i <= NumberOfFramesOfunevenS; i++) {
+      // overclocking
+      let x =
+        from +
+        (a *
+          ((((i * dynamicsTime) / NumberOfFramesOfunevenS) * i * dynamicsTime) /
+            NumberOfFramesOfunevenS)) /
+          2;
+      arr.push(x);
     }
 
     let distancePerOneFrame = uniformS / NumberOfFramesOfuniformS;
 
-    for( let i = 0; i <= NumberOfFramesOfuniformS; i++ ){
-         let x = to - (unevenS + uniformS) + i * distancePerOneFrame;
-         arr.push(x);
+    for (let i = 0; i <= NumberOfFramesOfuniformS; i++) {
+      let x = to - (unevenS + uniformS) + i * distancePerOneFrame;
+      arr.push(x);
     }
 
-    for( let i = 1; i <= NumberOfFramesOfunevenS; i++ ){ // braking
-        let x = from + unevenS + uniformS + (Vconst * i*dynamicsTime/NumberOfFramesOfunevenS) + (-a * (i*dynamicsTime/NumberOfFramesOfunevenS * i*dynamicsTime/NumberOfFramesOfunevenS) / 2);
-        arr.push(x);
+    for (let i = 1; i <= NumberOfFramesOfunevenS; i++) {
+      // braking
+      let x =
+        from +
+        unevenS +
+        uniformS +
+        (Vconst * i * dynamicsTime) / NumberOfFramesOfunevenS +
+        (-a *
+          ((((i * dynamicsTime) / NumberOfFramesOfunevenS) * i * dynamicsTime) /
+            NumberOfFramesOfunevenS)) /
+          2;
+      arr.push(x);
     }
-
   } else {
-    alert( 'dynamics Time (acceleration, deceleration time), cannot be more than half of the total movement time!' );
+    alert(
+      "dynamics Time (acceleration, deceleration time), cannot be more than half of the total movement time!"
+    );
   }
 
   return arr;
 }
 
-console.log(uniformlyAcceleratedRectilinearMotion( 100, 400, 6, 60, 1, 20 ))
+console.log(uniformlyAcceleratedRectilinearMotion(100, 400, 6, 60, 1, 20));
 
 //-----------------------
+
+
 
 // testing
 
@@ -136,7 +188,7 @@ const ctx = canvas.getContext("2d");
 const sizeX = 20;
 const sizeY = 20;
 
-let array = moveToDynamic([100, 20], [400, 200], 4, 60, 2, 20);
+let array = moveToDynamic([100, 20], [400, 200], 6, 60, 2, 20);
 
 console.log(array);
 
@@ -156,7 +208,48 @@ function show(arr) {
     } else {
       x++;
     }
+
   }, 1000 / arr[0].speed);
 }
 
 show(array);
+
+
+
+
+// testing  2 rotate
+
+const canvas2 = document.getElementById("myCanvas2");
+const ctx2 = canvas2.getContext("2d");
+var angle = 0;
+function convertToRadians(degree) {
+  return degree*(Math.PI/180);
+}
+function incrementAngle() {
+  angle += 3;
+  if(angle > 360) {
+      angle = 0;
+  }
+}
+function drawRandomlyColoredRectangle() {  
+  // clear the drawing surface
+  ctx2.clearRect(0,0,1280,720);
+  // you can also stroke a rect, the operations need to happen in order 
+  incrementAngle();
+  ctx2.save();                
+  ctx2.lineWidth = 10;  
+  ctx2.translate(200,200);
+  ctx2.rotate(convertToRadians(angle));
+  // set the fill style
+  ctx2.fillRect(-25,-25,50,50);
+  ctx2.strokeRect(-25,-25,50,50);                
+  ctx2.restore();
+}
+setInterval(drawRandomlyColoredRectangle, 20);
+
+
+//---------- object rotation
+function rotationElem(){
+
+}
+//-----------------------
