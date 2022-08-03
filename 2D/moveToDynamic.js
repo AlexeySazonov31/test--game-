@@ -1,66 +1,28 @@
-//---------- rectilinear uniform motion (two axles)
-
-function moveTo(from, to, duration, speed) {
-  // ( [x, y], [x, y], sec, number of frames per second )
-  let arr = [];
-
-  let arrX = uniformRectilinearMotion(from[0], to[0], duration, speed);
-  let arrY = uniformRectilinearMotion(from[1], to[1], duration, speed);
-
-  for (let i = 0; i < arrX.length; i++) {
-    let obj = {
-      x: arrX[i],
-      y: arrY[i],
-      speed: speed,
-    };
-    arr.push(obj);
-  }
-
-  return arr;
-}
-
-// --help functions--
-function uniformRectilinearMotion(from, to, duration, speed) {
-  // (one axles)
-  let arr = [];
-
-  let NumberOfFrames = duration * speed;
-  let distancePerOneFrame = (to - from) / NumberOfFrames;
-
-  for (let i = 0; i <= NumberOfFrames; i++) {
-    let x = from + i * distancePerOneFrame;
-    arr.push(x);
-  }
-
-  return arr;
-}
-
-//-----------------------
-
 //---------- rectilinear dynamic motion ( two axles )
 
-function moveToDynamic(
-  from,
-  to,
+function moveToDynamic( // ( px, px, px, px, sec, number of frames per second, time acceleration, [1-100](%))
+  fromX,
+  toX,
+  fromY,
+  toY,
   duration,
   speed,
   dynamicsTime,
   uniformlyAcceleratedPercentage
 ) {
-  // ( [x, y], [x, y], sec, number of frames per second )
   let arr = [];
 
   let arrX = uniformlyAcceleratedRectilinearMotion(
-    from[0],
-    to[0],
+    fromX,
+    toX,
     duration,
     speed,
     dynamicsTime,
     uniformlyAcceleratedPercentage
   );
   let arrY = uniformlyAcceleratedRectilinearMotion(
-    from[1],
-    to[1],
+    fromY,
+    toY,
     duration,
     speed,
     dynamicsTime,
@@ -176,83 +138,5 @@ function uniformlyAcceleratedRectilinearMotion( // movement along one axis with 
   return arr;
 }
 
-console.log(uniformlyAcceleratedRectilinearMotion(100, 400, 6, 60, 1, 20));
-
-//-----------------------
-
-
-
-// testing
-
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d");
-
-const sizeX = 20;
-const sizeY = 20;
-
-let array = moveToDynamic([100, 20], [400, 200], 6, 60, 2, 20);
-
-console.log(array);
-
-function show(arr) {
-  let x = 0;
-  let timerId = setInterval(() => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.beginPath();
-    ctx.rect(arr[x].x, arr[x].y, sizeX, sizeY);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-
-    if (x >= arr.length - 1) {
-      clearInterval(timerId);
-    } else {
-      x++;
-    }
-
-  }, 1000 / arr[0].speed);
-}
-
-show(array);
-
-
-
-
-
-//---------- object rotation (canvas)
-
-function rotateElem( speed, duration ){ // (  [.. -5 .. +5 ..], sec  )  speed(direction(+/-)) and time control
-
-  let x = 1;
-
-  const canvas2 = document.getElementById("myCanvas2");
-  const ctx2 = canvas2.getContext("2d");
-
-  let angle = 0;
-
-  let timerId = setInterval( () => {
-
-    ctx2.clearRect(0,0,1280,720);
-    angle = angle + speed;
-    ctx2.save();                
-    ctx2.lineWidth = 50;  
-    ctx2.translate(200,200);
-    ctx2.rotate(angle*(Math.PI/180));
-    ctx2.strokeRect(-25,-25,50,50);                
-    ctx2.restore();
-
-    if( x >= duration * 100  ){
-      clearInterval(timerId);
-    } else {
-      x++;
-    }
-  }, 10 )
-
-
-}
-rotateElem( -2, 2)
-
-//---------- object rotation
-
+console.log(moveToDynamic( 10,10,10,  100, 1, 60, 0.2, 10 ));
 //-----------------------
