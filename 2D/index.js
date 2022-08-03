@@ -19,6 +19,7 @@ function moveTo(from, to, duration, speed) {
   return arr;
 }
 
+// --help functions--
 function uniformRectilinearMotion(from, to, duration, speed) {
   // (one axles)
   let arr = [];
@@ -78,6 +79,7 @@ function moveToDynamic(
   return arr;
 }
 
+// --help functions--
 function uniformlyAcceleratedRectilinearMotion( // movement along one axis with dynamics (acceleration, braking)
   from,
   to,
@@ -217,39 +219,40 @@ show(array);
 
 
 
-// testing  2 rotate
 
-const canvas2 = document.getElementById("myCanvas2");
-const ctx2 = canvas2.getContext("2d");
-var angle = 0;
-function convertToRadians(degree) {
-  return degree*(Math.PI/180);
-}
-function incrementAngle() {
-  angle += 3;
-  if(angle > 360) {
-      angle = 0;
-  }
-}
-function drawRandomlyColoredRectangle() {  
-  // clear the drawing surface
-  ctx2.clearRect(0,0,1280,720);
-  // you can also stroke a rect, the operations need to happen in order 
-  incrementAngle();
-  ctx2.save();                
-  ctx2.lineWidth = 10;  
-  ctx2.translate(200,200);
-  ctx2.rotate(convertToRadians(angle));
-  // set the fill style
-  ctx2.fillRect(-25,-25,50,50);
-  ctx2.strokeRect(-25,-25,50,50);                
-  ctx2.restore();
-}
-setInterval(drawRandomlyColoredRectangle, 20);
+//---------- object rotation (canvas)
 
+function rotateElem( speed, duration ){ // (  [.. -5 .. +5 ..], sec  )  speed(direction(+/-)) and time control
+
+  let x = 1;
+
+  const canvas2 = document.getElementById("myCanvas2");
+  const ctx2 = canvas2.getContext("2d");
+
+  let angle = 0;
+
+  let timerId = setInterval( () => {
+
+    ctx2.clearRect(0,0,1280,720);
+    angle = angle + speed;
+    ctx2.save();                
+    ctx2.lineWidth = 50;  
+    ctx2.translate(200,200);
+    ctx2.rotate(angle*(Math.PI/180));
+    ctx2.strokeRect(-25,-25,50,50);                
+    ctx2.restore();
+
+    if( x >= duration * 100  ){
+      clearInterval(timerId);
+    } else {
+      x++;
+    }
+  }, 10 )
+
+
+}
+rotateElem( -2, 2)
 
 //---------- object rotation
-function rotationElem(){
 
-}
 //-----------------------
