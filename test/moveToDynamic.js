@@ -41,6 +41,60 @@ function moveToDynamic( // ( px, px, px, px, sec, number of frames per second, t
   return arr;
 }
 
+//---------- rectilinear dynamic motion ( three axles )
+
+function moveToDynamic3D( // ( px, px, px, px, px, px, sec, number of frames per second, time acceleration, [1-100](%))
+  fromX,
+  toX,
+  fromY,
+  toY,
+  fromZ,
+  toZ,
+  duration,
+  speed,
+  dynamicsTime,
+  uniformlyAcceleratedPercentage
+) {
+  let arr = [];
+
+  let arrX = uniformlyAcceleratedRectilinearMotion(
+    fromX,
+    toX,
+    duration,
+    speed,
+    dynamicsTime,
+    uniformlyAcceleratedPercentage
+  );
+  let arrY = uniformlyAcceleratedRectilinearMotion(
+    fromY,
+    toY,
+    duration,
+    speed,
+    dynamicsTime,
+    uniformlyAcceleratedPercentage
+  );
+  let arrZ = uniformlyAcceleratedRectilinearMotion(
+    fromZ,
+    toZ,
+    duration,
+    speed,
+    dynamicsTime,
+    uniformlyAcceleratedPercentage
+  );
+
+  for (let i = 0; i < arrX.length; i++) {
+    let obj = {
+      x: arrX[i],
+      y: arrY[i],
+      z: arrZ[i],
+      speed: speed,
+    };
+    arr.push(obj);
+  }
+
+  return arr;
+}
+
 // --help functions--
 function uniformlyAcceleratedRectilinearMotion( // movement along one axis with dynamics (acceleration, braking)
   from,
@@ -138,5 +192,6 @@ function uniformlyAcceleratedRectilinearMotion( // movement along one axis with 
   return arr;
 }
 
-console.log(moveToDynamic( 10,10,10,  100, 1, 60, 0.2, 10 ));
+console.log(moveToDynamic( 10,10,10,100, 1, 60, 0.2, 10 ));
+console.log(moveToDynamic3D( 10,50,10,100,10, 200, 1, 60, 0.2, 10 ));
 //-----------------------
