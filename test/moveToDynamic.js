@@ -147,8 +147,6 @@ function uniformlyAcceleratedRectilinearMotion( // movement along one axis with 
     let NumberOfFramesOfunevenS = dynamicsTime * speed;
     let NumberOfFramesOfuniformS = NumberOfFrames - NumberOfFramesOfunevenS * 2;
 
-    console.log(NumberOfFramesOfunevenS);
-
     let a = (2 * unevenS) / (dynamicsTime * dynamicsTime); // acceleration
     let Vconst = Math.sqrt(2 * a * unevenS);
 
@@ -192,6 +190,6 @@ function uniformlyAcceleratedRectilinearMotion( // movement along one axis with 
   return arr;
 }
 
-console.log(moveToDynamic( 10,10,10,100, 1, 60, 0.2, 10 ));
-console.log(moveToDynamic3D( 10,50,10,100,10, 200, 1, 60, 0.2, 10 ));
+console.log(moveToDynamic(10, 10, 10, 100, 1, 60, 0.2, 10));
+console.log(moveToDynamic3D(10, 50, 10, 100, 10, 200, 1, 60, 0.2, 10));
 //-----------------------

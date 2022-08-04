@@ -179,11 +179,10 @@ class IndexedMap {
 
     return this;
   }
-
-
 }
 
 // ------------------------ testing --------------------------------------------
+/*
 let collection = new IndexedMap();
 
 collection.set("key0", "value0");
@@ -239,11 +238,11 @@ collection.union([
     key: "key9",
     value: "value9",
   },
-  /*
-        {
-            value: 'value10'
-        }
-        */
+  
+      //  {
+        //    value: 'value10'
+       // }
+        
 ]);
 
 //collection.reverseIndexes();
@@ -254,3 +253,5 @@ collection.showCollection();
 
 collection.showCollection();
 
+
+*/
